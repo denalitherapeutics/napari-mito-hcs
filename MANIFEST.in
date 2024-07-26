@@ -1,0 +1,3 @@
+recursive-include src/napari_mito_hcs/data *.tif
+recursive-include src/napari_mito_hcs/config *.toml
+recursive-include src/napari_mito_hcs *.yaml

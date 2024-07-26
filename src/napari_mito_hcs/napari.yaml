@@ -1,0 +1,22 @@
+name: napari_mito_hcs
+contributions:
+  commands:
+    - id: napari_mito_hcs.mito_hcs
+      title: Mito HCS
+      python_name: napari_mito_hcs.widget:MitoHCSWidget
+    - id: napari_mito_hcs.load_wt_example_images
+      title: Load Mito HCS Example (WT)
+      python_name: napari_mito_hcs.widget:load_wt_example_images
+    - id: napari_mito_hcs.load_ko_example_images
+      title: Load Mito HCS Example (KO)
+      python_name: napari_mito_hcs.widget:load_ko_example_images
+  widgets:
+    - command: napari_mito_hcs.mito_hcs
+      display_name: Mito HCS
+  sample_data:
+    - command: napari_mito_hcs.load_wt_example_images
+      key: napari_mito_hcs_wt_intensity
+      display_name: Mito HCS Example (WT)
+    - command: napari_mito_hcs.load_ko_example_images
+      key: napari_mito_hcs_ko_intensity
+      display_name: Mito HCS Example (KO)

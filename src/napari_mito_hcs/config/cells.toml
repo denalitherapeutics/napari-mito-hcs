@@ -1,0 +1,6 @@
+intensity_smoothing = 0.5
+threshold = 1000
+smallest_hole = 100
+smallest_object = 200
+binary_smoothing = 2
+algorithm = 'cells'

@@ -1,0 +1,37 @@
+[find_file_params]
+cell_pattern = '(r[0-9]+c[0-9]+f[0-9]+)ch1'
+nuclei_pattern = '(r[0-9]+c[0-9]+f[0-9]+)ch2'
+mitochondria_pattern = '(r[0-9]+c[0-9]+f[0-9]+)ch3'
+
+[seg_nuclei_params]
+intensity_smoothing = 0.5
+threshold = 500
+smallest_hole = 1000
+smallest_object = 200
+binary_smoothing = 2
+algorithm = 'nuclei'
+
+[seg_cell_params]
+intensity_smoothing = 0.5
+threshold = 1000
+smallest_hole = 100
+smallest_object = 200
+binary_smoothing = 2
+algorithm = 'cells'
+
+[seg_mitochondria_params]
+intensity_smoothing = 0.0
+threshold = 5000
+smallest_hole = 0
+smallest_object = 0
+binary_smoothing = 0
+algorithm = 'mitochondria'
+
+[shape_index_params]
+features = ['spot', 'hole', 'ridge', 'valley', 'saddle']
+intensity_smoothing = 0.75
+parabola_height = 0
+
+[stat_params]
+stats = ['geometry', 'intensity', 'texture']
+spacing = [1.0, 1.0]
