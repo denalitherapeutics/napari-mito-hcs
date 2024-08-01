@@ -28,26 +28,12 @@ See ``mito-hcs-batch.py --help`` for details on additional arguments and usage
 """
 
 # Imports
-import pathlib
-import argparse
+import sys
 
 # Our own imports
-from napari_mito_hcs.pipeline import run_mito_hcs_batch
+from napari_mito_hcs.pipeline import run_mito_hcs_batch_cmd
 
 # Command line interface
 
-
-def parse_args(args=None):
-    parser = argparse.ArgumentParser('Batch process a directory with the Mito-HCS pipeline')
-    parser.add_argument('indir', type=pathlib.Path,
-                        help='Path to the directory with images to segment and analyze')
-    parser.add_argument('-o', '--outdir', type=pathlib.Path,
-                        help='Path to the directory to write output files to (default: ${indir}/mito-hcs)')
-    parser.add_argument('-c', '--config-file', type=pathlib.Path,
-                        help='Path to the config file to use when processing the images')
-    return parser.parse_args(args=args)
-
-
 if __name__ == '__main__':
-    args = parse_args()
-    run_mito_hcs_batch(**vars(args))
+    sys.exit(run_mito_hcs_batch_cmd())

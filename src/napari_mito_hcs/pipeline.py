@@ -53,12 +53,14 @@ Classes:
 Functions:
 
 * :py:class:`run_mito_hcs_batch`: Run the entire pipeline using the provided paths
+* :py:class:`run_mito_hcs_batch_cmd`: Entrypoint to run the entire pipeline from the command line
 
 """
 
 # Imports
 import pathlib
-from typing import Dict, Any, Generator, Optional
+import argparse
+from typing import Dict, Any, Generator, Optional, List
 
 # 3rd party
 import numpy as np
@@ -382,3 +384,25 @@ def run_mito_hcs_batch(indir: pathlib.Path,
 
         pipeline.save_stats(image_files)
     pipeline.calc_summary_stats(outdir)
+
+
+# Command line interface
+
+
+def run_mito_hcs_batch_cmd(args: Optional[List[str]] = None):
+    """ Run the MitoHCS pipeline from the command line
+
+    :param list[str] args:
+        If not None the list of arguments to the command or None for ``sys.argv``
+    """
+
+    parser = argparse.ArgumentParser('Batch process a directory with the Mito-HCS pipeline')
+    parser.add_argument('indir', type=pathlib.Path,
+                        help='Path to the directory with images to segment and analyze')
+    parser.add_argument('-o', '--outdir', type=pathlib.Path,
+                        help='Path to the directory to write output files to (default: ${indir}/mito-hcs)')
+    parser.add_argument('-c', '--config-file', type=pathlib.Path,
+                        help='Path to the config file to use when processing the images')
+    args = parser.parse_args(args=args)
+
+    run_mito_hcs_batch(**vars(args))

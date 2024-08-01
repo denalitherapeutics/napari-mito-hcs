@@ -26,7 +26,15 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install ".[test]"
+        python -m pip install ".[test]"
     - name: Test with pytest
       run: |
-        pytest
+        python -m pytest tests --doctest-modules --junitxml=junit/pytest-results.xml --cov=napari_mito_hcs --cov-report=xml --cov-report=html
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: |
+          junit/pytest-results.xml
+          htmlcov/
+      if: ${{ always() }}

@@ -1,8 +1,3 @@
-.. Napari MitoHCS documentation master file, created by
-   sphinx-quickstart on Thu Jul 18 11:07:13 2024.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Napari MitoHCS
 ==============
 
@@ -53,14 +48,23 @@ Batch Processing
 ----------------
 
 Once you have the parameters for your segmentation pipeline, you can use them to segment an entire directory of images with the ``mito-hcs-batch.py`` script in the ``scripts/`` folder.
-Given a folder of images located at ``path/to/data`` and a config file at ``path/to/config.toml``, you can run the script with:
+Given a folder of images located at ``path/to/images`` and a config file at ``path/to/config.toml``, you can run the script with:
 
 .. code-block:: bash
 
-   python mito-hcs-batch.py --config-file path/to/config.toml path/to/data
+   mito-hcs-batch --config-file path/to/config.toml path/to/data
 
-Results will be writen to the folder ``path/to/data/mito-hcs``.
-Run the command ``python mito-hcs-batch.py --help`` to see additional options.
+Results will be writen to the folder ``path/to/images/mito-hcs``.
+
+Segment a directory and write the outputs to a different location:
+
+.. code-block:: bash
+
+   mito-hcs-batch -o path/to/output path/to/images
+
+Results will be writen to the folder ``path/to/output``.
+
+Run the command ``mito-hcs-batch --help`` to see additional options.
 
 API Documentation
 -----------------

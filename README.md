@@ -27,13 +27,17 @@ If you have parameters saved from a previous setting, you can reload them using 
 
 ## Batch Processing
 
-Once you have the parameters for your segmentation pipeline, you can use them to segment an entire directory of images with the `mito-hcs-batch.py` script in the `scripts/` folder. Given a folder of images located at `path/to/data` and a config file at `path/to/config.toml`, you can run the script with:
+Once you have the parameters for your segmentation pipeline, you can use them to segment an entire directory of images with the `mito-hcs-batch` script. Given a folder of images located at `path/to/data` and a config file at `path/to/config.toml`, you can run the script with:
 
 ```{bash}
-python mito-hcs-batch.py --config-file path/to/config.toml path/to/data
+mito-hcs-batch --config-file path/to/config.toml path/to/data
 ```
 
-Results will be writen to the folder `path/to/data/mito-hcs`. Run the command `python mito-hcs-batch.py --help` to see additional options.
+Results will be writen to the folder `path/to/data/mito-hcs`. Run the command `mito-hcs-batch --help` to see additional options.
+
+## Installing
+
+`napari-mito-hcs` has been tested with Python 3.11 on Windows, OS X, and Linux. It may work on other python versions and operating systems with some modifications.
 
 ## Installing from Source
 
