@@ -64,7 +64,7 @@ class TestConfigFiles(helpers.FileSystemTestCase):
         # Expected params for the cell segmentation pipeline
         assert obj.intensity_smoothing == 0.5
         assert obj.threshold == 1000
-        assert obj.smallest_hole == 100
+        assert obj.largest_hole == 100
         assert obj.smallest_object == 200
         assert obj.binary_smoothing == 2
         assert obj.algorithm == 'cells'
@@ -76,7 +76,7 @@ class TestConfigFiles(helpers.FileSystemTestCase):
         # Expected params for the nuclei segmentation pipeline
         assert obj.intensity_smoothing == 0.5
         assert obj.threshold == 500
-        assert obj.smallest_hole == 1000
+        assert obj.largest_hole == 1000
         assert obj.smallest_object == 200
         assert obj.binary_smoothing == 2
         assert obj.algorithm == 'nuclei'
@@ -88,7 +88,7 @@ class TestConfigFiles(helpers.FileSystemTestCase):
         # Expected params for the mitochondria segmentation pipeline
         assert obj.intensity_smoothing == 0.0
         assert obj.threshold == 5000
-        assert obj.smallest_hole == 0
+        assert obj.largest_hole == 0
         assert obj.smallest_object == 0
         assert obj.binary_smoothing == 0
         assert obj.algorithm == 'mitochondria'

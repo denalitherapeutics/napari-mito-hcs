@@ -25,7 +25,7 @@ class TestSegmentationPipeline(unittest.TestCase):
             intensity_smoothing=0.0,
             threshold=50,
             smallest_object=-1,
-            smallest_hole=-1,
+            largest_hole=-1,
             binary_smoothing=0,
             algorithm='cells',
         )
@@ -48,7 +48,7 @@ class TestSegmentationPipeline(unittest.TestCase):
             intensity_smoothing=0.0,
             threshold=50,
             smallest_object=-1,
-            smallest_hole=-1,
+            largest_hole=-1,
             binary_smoothing=0,
             algorithm='nuclei',
         )
@@ -76,7 +76,7 @@ class TestSegmentationPipeline(unittest.TestCase):
             intensity_smoothing=0.0,
             threshold=50,
             smallest_object=-1,
-            smallest_hole=-1,
+            largest_hole=-1,
             binary_smoothing=0,
             algorithm='mitochondria',
         )

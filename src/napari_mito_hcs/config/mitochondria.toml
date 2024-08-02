@@ -1,6 +1,6 @@
 intensity_smoothing = 0.0
 threshold = 5000
-smallest_hole = 0
+largest_hole = 0
 smallest_object = 0
 binary_smoothing = 0
 algorithm = 'mitochondria'

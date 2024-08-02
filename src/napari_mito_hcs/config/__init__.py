@@ -9,6 +9,8 @@ Example: Load an object from disk, change some attributes, write it back to disk
     config.bar = 2
     config.save_config_file('path/to/file.toml')
 
+Attributes are assumed to be basic python types that can be serialized to/from `TOML <https://toml.io/en/>`_
+
 .. note:: This framework assumes the arguments to ``__init__`` are the same as the public attributes of the class.
 
     Private attributes are not saved

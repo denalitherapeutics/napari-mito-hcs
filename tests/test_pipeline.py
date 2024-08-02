@@ -25,7 +25,10 @@ class TestMitoHCSPipeline(helpers.FileSystemTestCase):
 
         seg_params = {
             'intensity_smoothing',
-            'threshold', 'smallest_object', 'smallest_hole', 'binary_smoothing',
+            'threshold',
+            'smallest_object',
+            'largest_hole',
+            'binary_smoothing',
             'algorithm',
         }
 

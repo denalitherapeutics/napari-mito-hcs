@@ -21,9 +21,9 @@
   `Geometry` and `Texture` must be selected to calculate the final spot to ridge ratio feature used by `Mito HCS`.  Other statistics may also be useful for different mitochondrial phenotypes.
 8. Click `Save Stats` to save per-mitochondria measurements to an Excel spreadsheet.
 
-Test out the segmentation pipeline on a few images from your data set (for instance, try the same parameters on `Open Sample > napari_mito_hcs > Mito HCS Example (KO)`). Once you're happy with how the pipeline performs on several images, select `Save Config` to write the parameters out to a TOML file that can be used for batch processing.
+Test out the segmentation pipeline on a few images from your data set (for instance, try the same parameters on `Open Sample > napari_mito_hcs > Mito HCS Example (KO)`). Once you're happy with how the pipeline performs on several images, select `Save Config` to write the parameters out to a TOML configuration file that can be used for batch processing.
 
-If you have parameters saved from a previous setting, you can reload them using the `Load Config`.
+If you have parameters saved from a previous session, you can reload them using `Load Config`.
 
 ## Batch Processing
 
@@ -35,11 +35,9 @@ mito-hcs-batch --config-file path/to/config.toml path/to/data
 
 Results will be writen to the folder `path/to/data/mito-hcs`. Run the command `mito-hcs-batch --help` to see additional options.
 
-## Installing
-
-`napari-mito-hcs` has been tested with Python 3.11 on Windows, OS X, and Linux. It may work on other python versions and operating systems with some modifications.
-
 ## Installing from Source
+
+`napari-mito-hcs` has been tested with Python 3.11 on Windows, OS X, and Linux. It may work on other python versions and operating systems with some modifications. Additionally `napari` needs to be installed with additional extensions to use the interactive plugin, so we recommend running `python -m pip install "napari[all]"` before installing `napari-mito-hcs`. The plugin has been tested with the `PyQt5` backend but may work with other napari-supported backends.
 
 We recommend installing `napari-mito-hcs` into a virtual environment. To create a fresh virtual environment, if on Linux/OS X, run:
 

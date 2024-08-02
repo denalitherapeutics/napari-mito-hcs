@@ -6,7 +6,7 @@ mitochondria_pattern = '(r[0-9]+c[0-9]+f[0-9]+)ch3'
 [seg_nuclei_params]
 intensity_smoothing = 0.5
 threshold = 500
-smallest_hole = 1000
+largest_hole = 1000
 smallest_object = 200
 binary_smoothing = 2
 algorithm = 'nuclei'
@@ -14,7 +14,7 @@ algorithm = 'nuclei'
 [seg_cell_params]
 intensity_smoothing = 0.5
 threshold = 1000
-smallest_hole = 100
+largest_hole = 100
 smallest_object = 200
 binary_smoothing = 2
 algorithm = 'cells'
@@ -22,7 +22,7 @@ algorithm = 'cells'
 [seg_mitochondria_params]
 intensity_smoothing = 0.0
 threshold = 5000
-smallest_hole = 0
+largest_hole = 0
 smallest_object = 0
 binary_smoothing = 0
 algorithm = 'mitochondria'

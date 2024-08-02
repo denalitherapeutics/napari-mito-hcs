@@ -9,7 +9,8 @@ Classes:
 
 Functions:
 
-* :py:func:`load_wt_fov`: Load the WT example field of view
+* :py:func:`load_wt_example_images`: Load the WT example images into napari
+* :py:func:`load_ko_example_images`: Load the KO example images into napari
 
 """
 # Imports
@@ -465,12 +466,22 @@ class StatExtractorWidget(widgets.Container):
 
 
 def load_wt_example_images() -> List[napari.types.LayerData]:
+    """ Load the WT example image
+
+    :returns:
+        A list of napari image layers containing the Cell, Mito, and Nucl images
+    """
     images = load_example_images('wt')
     # Return in the napari format
     return [(value, {"name": f'{key.capitalize()} Image'}) for key, value in images.items()]
 
 
 def load_ko_example_images() -> List[napari.types.LayerData]:
+    """ Load the KO example image
+
+    :returns:
+        A list of napari image layers containing the Cell, Mito, and Nucl images
+    """
     images = load_example_images('ko')
     # Return in the napari format
     return [(value, {"name": f'{key.capitalize()} Image'}) for key, value in images.items()]

@@ -53,8 +53,8 @@ class SegmentationPipeline(Configurable):
         (if None or < 0, the threshold is calculated by Otsu's method)
     :param int smallest_object:
         Size of the smallest foreground area to remove (in px)
-    :param int smallest_hole:
-        Size of the smallest background area to fill in (in px)
+    :param int largest_hole:
+        Size of the largest background area to fill in (in px)
     :param int binary_smoothing:
         Smooth the final binary mask using this many steps of dilation followed by this many steps of erosion (in px)
     :param str algorithm:
@@ -66,13 +66,13 @@ class SegmentationPipeline(Configurable):
                  intensity_smoothing: float = 0.0,
                  threshold: Optional[float] = None,
                  smallest_object: int = 0,
-                 smallest_hole: int = 0,
+                 largest_hole: int = 0,
                  binary_smoothing: int = 0,
                  algorithm: str = 'nuclei'):
         self.intensity_smoothing = intensity_smoothing
         self.threshold = threshold
         self.smallest_object = smallest_object
-        self.smallest_hole = smallest_hole
+        self.largest_hole = largest_hole
         self.binary_smoothing = binary_smoothing
 
         self.algorithm = algorithm
@@ -107,8 +107,8 @@ class SegmentationPipeline(Configurable):
         # Filter holes and small objects and smooth the mask
         if self.binary_smoothing > 0:
             intensity_mask = morphology.isotropic_dilation(intensity_mask, self.binary_smoothing)
-        if self.smallest_hole > 0:
-            intensity_mask = morphology.remove_small_holes(intensity_mask, self.smallest_hole)
+        if self.largest_hole > 0:
+            intensity_mask = morphology.remove_small_holes(intensity_mask, self.largest_hole)
         if self.binary_smoothing > 0:
             intensity_mask = morphology.isotropic_erosion(intensity_mask, self.binary_smoothing)
         if self.smallest_object > 0:
