@@ -1,3 +1,0 @@
-features = ['spot', 'hole', 'ridge', 'valley', 'saddle']
-intensity_smoothing = 0.75
-parabola_height = 0

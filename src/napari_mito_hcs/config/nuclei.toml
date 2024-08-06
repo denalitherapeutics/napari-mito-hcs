@@ -1,6 +1,0 @@
-intensity_smoothing = 0.5
-threshold = 500
-largest_hole = 1000
-smallest_object = 200
-binary_smoothing = 2
-algorithm = 'nuclei'
