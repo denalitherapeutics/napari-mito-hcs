@@ -7,7 +7,7 @@ import unittest
 import numpy as np
 
 # Our own imports
-from napari_mito_hcs import segmentation, utils
+from napari_mito_hcs import example_utils, segmentation, data
 
 # Tests
 
@@ -92,37 +92,37 @@ class TestSegmentationPipeline(unittest.TestCase):
 
     def test_nuclei_example_matches(self):
 
-        for example in ['wt', 'ko']:
+        for example in data.EXAMPLE_TYPES:
             with self.subTest(example):
-                nuclei_image = utils.load_example_images(example)['nucl']
+                nuclei_image = example_utils.load_example_images(example)['nucl']
 
                 pipeline = segmentation.SegmentationPipeline.load_default('nuclei')
                 res_labels = pipeline(nuclei_image)
 
-                exp_labels = utils.load_example_labels(example)['nucl']
+                exp_labels = example_utils.load_example_labels(example)['nucl']
 
                 np.testing.assert_allclose(res_labels, exp_labels)
 
     def test_cell_example_matches(self):
 
-        for example in ['wt', 'ko']:
+        for example in data.EXAMPLE_TYPES:
             with self.subTest(example):
-                cell_image = utils.load_example_images(example)['cell']
-                nuclei_labels = utils.load_example_labels(example)['nucl']
+                cell_image = example_utils.load_example_images(example)['cell']
+                nuclei_labels = example_utils.load_example_labels(example)['nucl']
 
                 pipeline = segmentation.SegmentationPipeline.load_default('cells')
                 res_labels = pipeline(cell_image, nuclei_labels=nuclei_labels)
 
-                exp_labels = utils.load_example_labels(example)['cell']
+                exp_labels = example_utils.load_example_labels(example)['cell']
 
                 np.testing.assert_allclose(res_labels, exp_labels)
 
     def test_mito_example_matches(self):
 
-        for example in ['wt', 'ko']:
+        for example in data.EXAMPLE_TYPES:
             with self.subTest(example):
-                mito_image = utils.load_example_images(example)['mito']
-                all_labels = utils.load_example_labels(example)
+                mito_image = example_utils.load_example_images(example)['mito']
+                all_labels = example_utils.load_example_labels(example)
 
                 nuclei_labels = all_labels['nucl']
                 cell_labels = all_labels['cell']

@@ -10,7 +10,7 @@ import tifffile
 # Our own imports
 from . import helpers
 
-from napari_mito_hcs import pipeline, utils
+from napari_mito_hcs import example_utils, pipeline
 
 # Tests
 
@@ -48,7 +48,7 @@ class TestMitoHCSPipeline(helpers.FileSystemTestCase):
         indir = self.tempdir / 'indir'
         indir.mkdir(parents=True, exist_ok=True)
 
-        intensity_images = utils.load_example_images('wt')
+        intensity_images = example_utils.load_example_images('wt')
 
         f1 = indir / 'r02c02f01ch1.tif'
         f2 = indir / 'r02c02f01ch2.tif'
@@ -58,7 +58,7 @@ class TestMitoHCSPipeline(helpers.FileSystemTestCase):
         tifffile.imwrite(f2, intensity_images['cell'])
         tifffile.imwrite(f3, intensity_images['mito'])
 
-        intensity_images = utils.load_example_images('ko')
+        intensity_images = example_utils.load_example_images('ko')
 
         f1 = indir / 'r02c05f01ch1.tif'
         f2 = indir / 'r02c05f01ch2.tif'
@@ -96,14 +96,44 @@ class TestMitoHCSPipeline(helpers.FileSystemTestCase):
         assert res_outdirs == exp_outdirs
 
         # Make sure we create the expected files under each FOV
-        exp_files = {
+        exp_segmentation_data = {
+            'r02c02f01': example_utils.load_example_labels('wt'),
+            'r02c05f01': example_utils.load_example_labels('ko'),
+        }
+        exp_feature_data = {
+            'r02c02f01': example_utils.load_example_features('wt'),
+            'r02c05f01': example_utils.load_example_features('ko'),
+        }
+
+        exp_filenames = {
             'cell_labels.tif', 'nuclei_labels.tif', 'mitochondria_labels.tif',
             'hole_feature.tif', 'saddle_feature.tif', 'spot_feature.tif', 'valley_feature.tif', 'ridge_feature.tif',
             'stats.xlsx',
         }
         for res_outdir in res_outdirs:
-            res_files = {p.name for p in res_outdir.iterdir() if p.is_file()}
-            assert res_files == exp_files
+            res_files = {p for p in res_outdir.iterdir() if p.is_file()}
+            res_filenames = {p.name for p in res_files}
+            assert res_filenames == exp_filenames
+
+            # Make sure the calculated segmentations match the example
+            exp_seg_data = exp_segmentation_data[res_outdir.name]
+            for res_file in res_files:
+                if not res_file.stem.endswith('_labels'):
+                    continue
+                exp_data = exp_seg_data[res_file.name[:4]]
+                res_data = tifffile.imread(res_file)
+
+                np.testing.assert_allclose(res_data, exp_data, atol=1e-2, rtol=1e-2)
+
+            # Make sure the calculated features match the example
+            exp_feat_data = exp_feature_data[res_outdir.name]
+            for res_file in res_files:
+                if not res_file.stem.endswith('_feature'):
+                    continue
+                exp_data = exp_feat_data[res_file.name.split('_', 1)[0]]
+                res_data = tifffile.imread(res_file)
+
+                np.testing.assert_allclose(res_data, exp_data, atol=1e-2, rtol=1e-2)
 
         # Make sure we make the final summary worksheet
         assert (outdir / 'mito-hcs-stats.xlsx').is_file()

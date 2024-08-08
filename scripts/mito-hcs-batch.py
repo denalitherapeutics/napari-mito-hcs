@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """ Segment and extract stats for a whole directory of images
 
 Segment a directory with the default settings:

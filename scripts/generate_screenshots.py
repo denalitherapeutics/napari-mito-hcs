@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """ Generate the screenshots used for figure 4 """
 
 # Imports
@@ -5,46 +6,51 @@ import shutil
 import pathlib
 
 # 3rd party
-import numpy as np
-
 import napari
 
 # Our own imports
-from napari_mito_hcs import utils
+from napari_mito_hcs import example_utils
 
 # Constants
-FULL_ZOOM = 2.1
-INSET_ZOOM = 8.0
+FULL_ZOOM = 2.1  # Zoom level for the full view, Figure 4B, C
+INSET_ZOOM = 8.0  # Zoom level for the inset view, Figure 4B, C
+
+# Center of the inset view, Figure 4B, C
 INSET_CENTER = {
     'spot': (0.0, 344.15769644299723, 806.0154011160973),
     'ridge': (0.0, 344.15769644299723, 806.0154011160973),
 }
 
+# Contrast limits for each feature image, Figure 4B, C
 CONTRAST_LIMITS = {
     'spot': (0.0, 0.1),
     'ridge': (0.0, 0.2)
 }
+# width x height in pixels for the output image
 SIZE = (1000, 1000)
+
+# From image metadata, X/Y pixel pitch for the example images
+UM_PER_PX = 0.29668813247470105  # um/px
 
 # Functions
 
 
-def screenshot_feature(feature_name: str, feature_image: np.ndarray, outroot: pathlib.Path):
-    """ Generate a full screenshot and a zoomed in screenshot
+def screenshot_feature(example_type: str, feature_name: str, outroot: pathlib.Path):
+    """ Generate a full screenshot and a zoomed in screenshot of a feature example image
 
+    :param str example_type:
+        The example to generate a feature screenshots for (either 'wt' or 'ko')
     :param str feature_name:
-        Which feature image to generate screenshots of
-    :param ndarray feature_image:
-        The feature image array
+        Which example feature image to generate screenshots of
+        One of ('spot', 'hole', 'valley', 'saddle', or 'ridge')
     :param Path outroot:
         Directory to save the screenshots to
     """
-
-    um_per_px = 0.29668813247470105
+    feature_image = example_utils.load_example_features(example_type)[feature_name]
 
     viewer = napari.Viewer(ndisplay=2)
     try:
-        r = viewer.add_image(feature_image, name=feature_name, scale=(um_per_px, um_per_px))
+        r = viewer.add_image(feature_image, name=feature_name, scale=(UM_PER_PX, UM_PER_PX))
 
         viewer.scale_bar.visible = True
         viewer.scale_bar.unit = 'um'
@@ -63,9 +69,9 @@ def screenshot_feature(feature_name: str, feature_image: np.ndarray, outroot: pa
             (cx + hx, cy - hy),
             (cx - hx, cy - hy),
         ]
-        viewer.add_shapes([shape], shape_type='path', scale=(um_per_px, um_per_px), edge_width=5, edge_color='white', name='Inset BBox')
+        viewer.add_shapes([shape], shape_type='path', scale=(UM_PER_PX, UM_PER_PX), edge_width=5, edge_color='white', name='Inset BBox')
 
-        viewer.camera.zoom = FULL_ZOOM/um_per_px
+        viewer.camera.zoom = FULL_ZOOM/UM_PER_PX
 
         viewer.screenshot(outroot / f'{feature_name}_full_sb.png', size=SIZE, flash=False, canvas_only=True)
 
@@ -74,8 +80,8 @@ def screenshot_feature(feature_name: str, feature_image: np.ndarray, outroot: pa
 
         viewer.screenshot(outroot / f'{feature_name}_full.png', size=SIZE, flash=False, canvas_only=True)
 
-        viewer.camera.center = (0.0, cx*um_per_px, cy*um_per_px)
-        viewer.camera.zoom = INSET_ZOOM/um_per_px
+        viewer.camera.center = (0.0, cx*UM_PER_PX, cy*UM_PER_PX)
+        viewer.camera.zoom = INSET_ZOOM/UM_PER_PX
 
         viewer.scale_bar.visible = True
         viewer.screenshot(outroot / f'{feature_name}_zoom_sb.png', size=SIZE, flash=False, canvas_only=True)
@@ -96,8 +102,11 @@ def main():
     outroot.mkdir(parents=True, exist_ok=True)
 
     for feature_name in ['spot', 'ridge']:
-        feature_image = utils.load_example_features('wt')[feature_name]
-        screenshot_feature(feature_name, feature_image, outroot)
+        screenshot_feature(
+            example_type='wt',
+            feature_name=feature_name,
+            outroot=outroot,
+        )
 
 
 if __name__ == '__main__':

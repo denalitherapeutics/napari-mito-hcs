@@ -29,7 +29,7 @@ from .pipeline import MitoHCSPipeline
 from .segmentation import SegmentationPipeline
 from .feature import ShapeIndexPipeline
 from .stats import StatExtractor
-from .utils import load_example_images
+from .example_utils import load_example_images
 
 # Widget Classes
 
@@ -95,7 +95,21 @@ class MitoHCSWidget(widgets.Container):
 
     # Parameter Handling
 
+    def get_pipeline(self) -> MitoHCSPipeline:
+        """ Get a MitoHCSPipeline for the current GUI state """
+
+        pipeline = MitoHCSPipeline.load_default('mito-hcs')
+        pipeline.seg_nuclei_params.update(self._nucl_seg._params)
+        pipeline.seg_cell_params.update(self._cell_seg._params)
+        pipeline.seg_mitochondria_params.update(self._mito_seg._params)
+
+        pipeline.shape_index_params.update(self._shape_index._params)
+        pipeline.stat_params.update(self._stats_pipeline._params)
+        return pipeline
+
     def update_params(self, pipeline: MitoHCSPipeline):
+        """ Update the GUI state from a MitoHSCPipeline object """
+
         self._nucl_seg.update_params(pipeline.seg_nuclei_params)
         self._cell_seg.update_params(pipeline.seg_cell_params)
         self._mito_seg.update_params(pipeline.seg_mitochondria_params)
@@ -129,14 +143,7 @@ class MitoHCSWidget(widgets.Container):
             return
 
         # Load the current settings from the widgets
-        pipeline = MitoHCSPipeline.load_default('mito-hcs')
-        pipeline.seg_nuclei_params.update(self._nucl_seg._params)
-        pipeline.seg_cell_params.update(self._cell_seg._params)
-        pipeline.seg_mitochondria_params.update(self._mito_seg._params)
-
-        pipeline.shape_index_params.update(self._shape_index._params)
-        pipeline.stat_params.update(self._stats_pipeline._params)
-
+        pipeline = self.get_pipeline()
         pipeline.save_config_file(config_file)
 
         show_info(f'Wrote parameters to {config_file}')

@@ -1,8 +1,24 @@
 """ Integrated Mito HCS pipeline
 
-The entire pipeline is encapsulated in the :py:class:`MitoHCSPipeline` class.
+The entire pipeline can be run by calling the function :py:func:`run_mito_hcs_batch`. If
+you don't need to modify the individual steps of the pipeline, just run:
 
-To run a complete analysis on a folder using the default settings:
+.. code-block:: python
+
+    indir = 'path/to/images'
+    outdir = 'path/to/output/images'
+    config_file = 'path/to/config.toml'  # or None for the default 'mito-hcs' pipeline
+
+    run_mito_hcs_batch(
+        indir=indir,
+        outdir=outdir,
+        config_file=config_file,
+    )
+
+If you would like fine grained control over the individual steps of the processing,
+you can use the methods encapsulated in the py:class:`MitoHCSPipeline` class.
+
+To run a complete analysis on a folder using the default ``mito-hcs`` settings:
 
 .. code-block:: python
 
@@ -21,20 +37,7 @@ To run a complete analysis on a folder using the default settings:
         pipeline.save_stats(image_files)
     pipeline.calc_summary_stats(outdir)
 
-If you don't need to make modifications to the individual pipeline steps, you can
-also just call :py:func:`run_mito_hcs_batch` (which performs the same steps as above):
-
-.. code-block:: python
-
-    indir = 'path/to/images'
-    outdir = 'path/to/output/images'
-    config_file = 'path/to/config.toml'  # or None for the default 'mito-hcs' pipeline
-
-    run_mito_hcs_batch(
-        indir=indir,
-        outdir=outdir,
-        config_file=config_file,
-    )
+This performs an identical analysis as the :py:func:`run_mito_hcs_batch` call above.
 
 A command line tool is also available under ``scripts/mito-hcs-batch.py``:
 

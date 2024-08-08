@@ -16,6 +16,9 @@ from dataclasses import dataclass
 # Our imports
 from .config import Configurable
 
+# Constants
+IMAGE_SUFFIXES = ('.tif', '.tiff')
+
 # Classes
 
 
@@ -40,10 +43,10 @@ class FileGroup:
         return self.outdir / self.prefix / 'stats.xlsx'
 
     def get_intensity_path(self, algorithm: str) -> pathlib.Path:
-        """ Get the path to the segmentation image
+        """ Get the path to the intensity image
 
         :param str algorithm:
-            Which segmentation algorithm is being used
+            Which segmentation algorithm should be applied to the image (one of 'nuclei', 'cell', 'mitochondria')
         """
         return self.outdir / self.prefix / f'{algorithm}_image.tif'
 
@@ -51,15 +54,15 @@ class FileGroup:
         """ Get the path to the segmentation image
 
         :param str algorithm:
-            Which segmentation algorithm is being used
+            Which segmentation algorithm was be applied to the image (one of 'nuclei', 'cell', 'mitochondria')
         """
         return self.outdir / self.prefix / f'{algorithm}_labels.tif'
 
     def get_feature_path(self, algorithm: str) -> pathlib.Path:
-        """ Get the path to the segmentation image
+        """ Get the path to the feature image
 
         :param str algorithm:
-            Which feature algorithm is being used
+            Which feature algorithm is being used (one of 'hole', 'spot', 'ridge', 'valley', 'saddle')
         """
         return self.outdir / self.prefix / f'{algorithm}_feature.tif'
 
@@ -140,7 +143,7 @@ class FileFinder(Configurable):
         for p in sorted(indir.iterdir()):
             if p.name.startswith(('.', '~', '$')):
                 continue
-            if not p.name.endswith('.tif'):
+            if not p.name.endswith(IMAGE_SUFFIXES):
                 continue
             stem = p.stem
             for pattern_name, pattern in patterns.items():

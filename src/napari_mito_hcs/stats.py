@@ -175,17 +175,9 @@ class StatExtractor(object):
             df = df[df['ParentID'] > 0].copy()
         return df
 
-    @classmethod
-    def list_available_stats(cls) -> List[str]:
+    @staticmethod
+    def list_available_stats() -> List[str]:
         return ['geometry', 'intensity', 'texture']
-
-    def add_stat(self, stat: str):
-        if stat not in self.stats:
-            self.stats.append(stat)
-
-    def remove_stat(self, stat: str):
-        if stat in self.stats:
-            self.stats.remove(stat)
 
 # Function
 

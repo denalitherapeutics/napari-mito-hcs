@@ -40,16 +40,16 @@ class ShapeIndexPipeline(Configurable):
 
     :param list[str] features:
         The list of shape index features to extract
-    :param float intensity_smoothing:
-        If >0, smooth the intensity image with gaussian kernel before extracting features
     :param int parabola_height:
         If >0, height (in px) of the parabolic filter to use for background subtraction
+    :param float intensity_smoothing:
+        If >0, smooth the intensity image with gaussian kernel before extracting features
     """
 
     def __init__(self,
                  features: Optional[Union[List[str], str]] = None,
-                 intensity_smoothing: float = 0.75,
-                 parabola_height: int = 50):
+                 parabola_height: int = 50,
+                 intensity_smoothing: float = 0.75):
 
         if features is None:
             features = self.list_available_features()
@@ -60,8 +60,8 @@ class ShapeIndexPipeline(Configurable):
         self.parabola_height = parabola_height
         self.intensity_smoothing = intensity_smoothing
 
-    @classmethod
-    def list_available_features(cls) -> List[str]:
+    @staticmethod
+    def list_available_features() -> List[str]:
         """ Get a list of all the features we **could** calculate
 
         :returns:
@@ -69,17 +69,35 @@ class ShapeIndexPipeline(Configurable):
         """
         return ['spot', 'hole', 'ridge', 'valley', 'saddle']
 
-    def add_feature(self, feature_name: str):
-        """ Add a feature to the list if not already there """
+    def subtract_background_parabolic(self, intensity_image: np.ndarray) -> np.ndarray:
+        """ Apply a parabolic background correction
 
-        if feature_name not in self.features:
-            self.features.append(feature_name)
+        Uses a 2D sliding parabola filter with a height of ``self.parabola_height**2`` at (0, 0) which
+        slopes down towards 0 in both x and y.
 
-    def remove_feature(self, feature_name: str):
-        """ Remove a feature from the list if there """
+        If ``self.parabola_height`` is None or < 0, the original image is returned.
 
-        if feature_name in self.features:
-            self.features.remove(feature_name)
+        :param ndarray intensity_image:
+            The 2D (n x m) intensity image to subtract the background from
+        :returns:
+            The 2D (n x m) image after background subtraction. Values below the background are set to 0
+        """
+
+        if self.parabola_height is None or self.parabola_height <= 0:
+            return intensity_image
+
+        halfwidth = int(np.ceil(self.parabola_height))
+
+        x = np.linspace(-halfwidth, halfwidth, 2*halfwidth+1)
+        xx, yy = np.meshgrid(x, x)
+        kernel = self.parabola_height**2 - (xx**2 + yy**2)
+        kernel[kernel < 0] = np.inf
+
+        # Apply the filter with our parabolic kernel instead of the typical ball kernel
+        background_image = restoration.rolling_ball(intensity_image, kernel=kernel)
+        intensity_image = intensity_image - background_image
+        intensity_image[intensity_image < 0] = 0
+        return intensity_image
 
     def __call__(self, intensity_image: np.ndarray) -> np.ndarray:
         """ Extract shape index features
@@ -91,21 +109,7 @@ class ShapeIndexPipeline(Configurable):
         """
         intensity_image = intensity_image.astype(np.float32)
 
-        # Apply the parabolic background correction (if requested)
-        if self.parabola_height is not None and self.parabola_height > 0:
-            # Sliding parabola filter - the parabola has a height of parabola_height**2 at (0, 0)
-            # and slopes downward as x**2 on both sides
-            halfwidth = int(np.ceil(self.parabola_height))
-
-            x = np.linspace(-halfwidth, halfwidth, 2*halfwidth+1)
-            xx, yy = np.meshgrid(x, x)
-            kernel = self.parabola_height**2 - (xx**2 + yy**2)
-            kernel[kernel < 0] = np.inf
-
-            # Apply the filter with our parabolic kernel instead of the typical ball kernel
-            background_image = restoration.rolling_ball(intensity_image, kernel=kernel)
-            intensity_image = intensity_image - background_image
-            intensity_image[intensity_image < 0] = 0
+        intensity_image = self.subtract_background_parabolic(intensity_image)
 
         # Smooth the intensity image to help with numeric stability
         if self.intensity_smoothing is None or self.intensity_smoothing < 1e-2:

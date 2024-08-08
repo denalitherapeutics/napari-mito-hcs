@@ -3,11 +3,6 @@
 Classes:
 
 * :py:class:`FileSystemTestCase`: Tests that need a temporary directory
-* :py:class:`StreamRecord`: Record a stream like sys.stdout
-
-Decorators:
-
-* :py:func:`record_stdout`: Record stdout in a context or decorator
 
 """
 

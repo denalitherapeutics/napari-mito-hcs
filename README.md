@@ -1,6 +1,36 @@
 # Napari MitoHCS Plugin
 
-`napari-mito-hcs` is a plugin for [napari](https://napari.org/stable/) that helps analyze high-content images of mitochondira. It allows you to segment nuclei, cells, mitochondira, and then extract texture features of the mitochondria that can be useful when comparing the state of different cell types.
+`napari-mito-hcs` is a plugin for [napari](https://napari.org/stable/) that helps analyze high-content microscopy images of mitochondira. It allows you to segment images of nuclei, cells, and mitochondira, and then extract texture features of the mitochondria that can be useful when comparing the state of different cell types.
+
+## Installing from Source
+
+`napari-mito-hcs` has been tested with Python 3.11 on Windows, OS X, and Linux. It may work with other python versions and operating systems with some modifications.
+
+1. We recommend installing `napari-mito-hcs` into a virtual environment. To create a fresh virtual environment, if on Linux/OS X, run:
+
+    python -m venv ~/mito_hcs_env
+    source  ~/mito_hcs_env/bin/activate
+
+If on Windows, instead do:
+
+    python -m venv mito_hcs_env
+    mito_hcs_env\Scripts\activate
+
+2. `napari` needs to be installed with additional extensions to use the interactive plugin. To install `napari` with the necessary backend and extensions run:
+
+    python -m pip install "napari[all]"
+
+This will install napari along with the `PyQt5` backend and additional packages required to make the `napari-mito-hcs` plugin work. `napari-mito-hcs` has only been tested with the `PyQt5` backend, but may work with other napari supported backends.
+
+3. Next install `napari-mito-hcs` and dependencies:
+
+    python -m pip install .
+
+4. Finally launch `napari`. The tools provided by `napari-mito-hcs` will be available under `Plugins > Mito-HCS`:
+
+    napari
+
+If you would like to use the `napari-mito-hcs` plugin in a standalone napari session instead of from the command line, make sure you launch the `napari` program from the shortcut created in the virtual environment. This will be at `mito_hcs_env\Scripts\napari.exe` on Windows and at `mito_hcs_env/bin/napari` on OS X and Linux.
 
 ## Interactive Processing
 
@@ -35,28 +65,13 @@ mito-hcs-batch --config-file path/to/config.toml path/to/data
 
 Results will be writen to the folder `path/to/data/mito-hcs`. Run the command `mito-hcs-batch --help` to see additional options.
 
-## Installing from Source
+## Configuration File
 
-`napari-mito-hcs` has been tested with Python 3.11 on Windows, OS X, and Linux. It may work on other python versions and operating systems with some modifications. Additionally `napari` needs to be installed with additional extensions to use the interactive plugin, so we recommend running `python -m pip install "napari[all]"` before installing `napari-mito-hcs`. The plugin has been tested with the `PyQt5` backend but may work with other napari-supported backends.
+The configuration file contains advanced options to fine tune the individual stages of the pipeline beyond the basic options provided by the interactive plugin. It also contains options that are only relevant to batch processing, such as options to control how files are located and grouped into fields of view, as well as options to control how the aggregated per-field of view statistics are calculated.
 
-We recommend installing `napari-mito-hcs` into a virtual environment. To create a fresh virtual environment, if on Linux/OS X, run:
+In particular, the `[find_file_params]` section of the configuration file provides a way to group the images under `path/to/data` into individual fields of view using [regular expressions](https://docs.python.org/3/library/re.html). The default pattern assumes the files are named something like `"r01c02f03ch4.tif"` (corresponding to channel 4 of the image taken in row 1, column 2, field 3). Files are grouped together into fields of view if they share the same row/column/field prefix. The nuclei image is assumed to be channel 1, the cell mask is assumed to be channel 2, and the mitochondria image is assumed to be channel 3. If your files follow a different naming convention, or your channels are in a different order, you will need to modify these patterns in the configuration file to correctly find and group your images for batch processing.
 
-    python -m venv ~/mito_hcs_env
-    source  ~/mito_hcs_env/bin/activate
-
-If on Windows, instead do:
-
-    python -m venv mito_hcs_env
-    mito_hcs_env\Scripts\activate
-
-Next install `napari` and `napari-mito-hcs` and dependencies:
-
-    python -m pip install "napari[all]"
-    python -m pip install .
-
-Finally launch `napari`. The tools provided by `napari-mito-hcs` will be available under `Plugins > Mito-HCS`:
-
-    napari
+The configuration file defines many other options that modify all stages of the pipeline. See the `Configuration File` section in the documentation for details on what each parameter does and how to modify it.
 
 ## Running the tests
 
@@ -90,4 +105,8 @@ The built documentation should now be found under `docs/_build/index.html`.
 
 If `napari-mito-hcs` has been useful in your research, consider citing
 
-> Chin et al, ...
+> Marcus Y. Chin, David Joy, Madhuja Samaddar, Anil Rana, Johann Chow, Takashi Miyamoto, and Meredith Calvert. Novel high-content and open-source image analysis tools for profiling mitochondrial morphology in neurological cell models. bioRxiv (2024)
+
+## License
+
+`napari-mito-hcs` is provided under the Apache 2.0 License. See `LICENSE.txt` for details.

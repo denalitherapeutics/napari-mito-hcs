@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+""" Generate the example segmentation and feature images for the MitoHCS plugin """
 
 # Imports
 import pathlib
@@ -9,7 +11,7 @@ import numpy as np
 import tifffile
 
 # Our own imports
-from napari_mito_hcs import utils, segmentation, feature
+from napari_mito_hcs import example_utils, segmentation, feature, data
 
 # Functions
 
@@ -19,20 +21,19 @@ def generate_segmentation(example_type: str,
     """ Generate the segmentation examples
 
     :param str example_type:
-        The example to generate a segmentation for
+        The example to generate a segmentation for (either 'wt' or 'ko')
     :param Path outdir:
         Where to write the segmentation data to
     """
     outdir.mkdir(parents=True, exist_ok=True)
 
-    # Load the raw images
-    example_images = utils.load_example_images(example_type)
+    example_images = example_utils.load_example_images(example_type)
 
     nucl_image = example_images['nucl']
     cell_image = example_images['cell']
     mito_image = example_images['mito']
 
-    # Segment nuclei
+    # Segment nuclei, cells, then mitochondria
     pipeline = segmentation.SegmentationPipeline.load_default('nuclei')
     nuclei_labels = pipeline(nucl_image)
 
@@ -53,14 +54,13 @@ def generate_features(example_type: str,
     """ Generate the feature examples
 
     :param str example_type:
-        The example to generate a feature set for
+        The example to generate a feature set for (either 'wt' or 'ko')
     :param Path outdir:
         Where to write the feature data to
     """
     outdir.mkdir(parents=True, exist_ok=True)
 
-    # Load the raw images
-    example_images = utils.load_example_images(example_type)
+    example_images = example_utils.load_example_images(example_type)
 
     mito_image = example_images['mito']
 
@@ -94,7 +94,7 @@ def main():
         shutil.rmtree(outroot)
     outroot.mkdir(parents=True, exist_ok=True)
 
-    for example_type in ['wt', 'ko']:
+    for example_type in data.EXAMPLE_TYPES:
         generate_segmentation(example_type, outroot / example_type)
         generate_features(example_type, outroot / example_type)
 

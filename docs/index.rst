@@ -71,7 +71,7 @@ Configuration File
 
 The configuration file is written in the `TOML file format <https://toml.io/en/>`_.
 
-The default configuration for `napari-mito-hcs` looks like this:
+The default configuration for ``napari-mito-hcs`` looks like this:
 
 .. literalinclude:: ../src/napari_mito_hcs/config/mito-hcs.toml
    :language: toml
@@ -82,10 +82,35 @@ find_file_params
 ^^^^^^^^^^^^^^^^
 
 This section defines three `regular expressions <https://docs.python.org/3/library/re.html>`_ that are used to find the cell, nuclei, and mitochondria images respectively.
-The regular expression must define a group (a pattern between parenthesis ``($prefix)``) that captures a prefix suitable for organizing the images into individual fields of view.
-The pattern is case-insensitive and should not include the ".tif" suffix.
+The regular expression must define a group (a pattern between parenthesis i.e. ``($prefix)``) that captures a prefix suitable for organizing the images into individual fields of view.
+The pattern is case-insensitive and should not include the ".tif" suffix. Unmatched files in the directory are simply ignored.
 
-Ex: The default ``cell_pattern`` is ``(r[0-9]+c[0-9]+f[0-9]+)ch1`` which matches an image with a name like ``r02c03f01ch1.tif`` and will group it with other images with the prefix ``r02c03f01``
+Ex: The default ``cell_pattern`` is ``(r[0-9]+c[0-9]+f[0-9]+)ch2`` which matches an image with a name like ``r02c03f01ch2.tif`` and will group it with other images with the prefix ``r02c03f01``
+
+Ex: Some high content systems collect a z-stack. To explicitly use the second plane of the z-stack (ignoring the others), you might write:
+
+.. code-block:: toml
+
+   [find_file_params]
+   nuclei_pattern = '(r[0-9]+c[0-9]+f[0-9]+)z02ch1'
+   cell_pattern = '(r[0-9]+c[0-9]+f[0-9]+)z02ch2'
+   mitochondria_pattern = '(r[0-9]+c[0-9]+f[0-9]+)z02ch3'
+
+Which will match files with names like ``r02c03f01z02ch2.tif``, but which will **not** include the z-index as part of the prefix when grouping fields of view (the prefix will be ``r02c03f01`` for our example image).
+
+The assignment of images to nuclei, cell, and mitochondria is entirely based on the file name, which allows you to skip channels that are not relevant, or even reuse the same channel image for different parts of the pipeline.
+For instance, if your experiment only has a nuclei image ``(ch1)`` and a mitochondira image ``(ch2)``, you can calculate a pseudo-cell mask with a configuration similar to the following:
+
+.. code-block:: toml
+
+   [find_file_params]
+   nuclei_pattern = '(r[0-9]+c[0-9]+f[0-9]+)ch1'
+   cell_pattern = '(r[0-9]+c[0-9]+f[0-9]+)ch2'
+   mitochondria_pattern = '(r[0-9]+c[0-9]+f[0-9]+)ch2'
+
+Notice that ``ch2`` is used for both ``cell_pattern`` and ``mitochondria_pattern``.
+Typically you would then set a relatively low threshold for the ``[seg_cell_params]`` block to include non-specific cytoplasmic staining, and then a higher threshold for ``[seg_mitochondria_params]`` to only include true mitochondrial staining.
+This approach won't work for all mitochondrial stains and all cell types though, so it's usually better to also have a dedicated cytoplasmic marker.
 
 seg\_\*\_params
 ^^^^^^^^^^^^^^^
@@ -147,7 +172,7 @@ API Documentation
    widget
    config
    finder
-   utils
+   example_utils
 
 Indices and tables
 ==================

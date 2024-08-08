@@ -88,7 +88,7 @@ class Configurable(object):
 
     @classmethod
     def load_config(cls, config: str) -> 'Configurable':
-        """ Load the class from a config file
+        """ Load the class from a config string
 
         :param str config:
             The TOML formatted config string for this class

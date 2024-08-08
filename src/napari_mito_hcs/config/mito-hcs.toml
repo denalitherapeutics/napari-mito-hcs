@@ -1,6 +1,6 @@
 [find_file_params]
-cell_pattern = '(r[0-9]+c[0-9]+f[0-9]+)ch1'
-nuclei_pattern = '(r[0-9]+c[0-9]+f[0-9]+)ch2'
+nuclei_pattern = '(r[0-9]+c[0-9]+f[0-9]+)ch1'
+cell_pattern = '(r[0-9]+c[0-9]+f[0-9]+)ch2'
 mitochondria_pattern = '(r[0-9]+c[0-9]+f[0-9]+)ch3'
 
 [seg_nuclei_params]
