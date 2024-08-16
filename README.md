@@ -6,7 +6,9 @@
 
 `napari-mito-hcs` has been tested with Python 3.11 on Windows, OS X, and Linux. It may work with other python versions and operating systems with some modifications.
 
-1. We recommend installing `napari-mito-hcs` into a virtual environment. To create a fresh virtual environment, if on Linux/OS X, run:
+1. We recommend installing `napari-mito-hcs` into a virtual environment.
+
+To create a fresh virtual environment, if on Linux/OS X, run:
 
     python -m venv ~/mito_hcs_env
     source  ~/mito_hcs_env/bin/activate
@@ -16,17 +18,27 @@ If on Windows, instead do:
     python -m venv mito_hcs_env
     mito_hcs_env\Scripts\activate
 
-2. `napari` needs to be installed with additional extensions to use the interactive plugin. To install `napari` with the necessary backend and extensions run:
+2. `napari` needs to be installed with additional extensions to use the interactive plugin.
+
+To install `napari` with the necessary backend and extensions run:
 
     python -m pip install "napari[all]"
 
 This will install napari along with the `PyQt5` backend and additional packages required to make the `napari-mito-hcs` plugin work. `napari-mito-hcs` has only been tested with the `PyQt5` backend, but may work with other napari supported backends.
 
-3. Next install `napari-mito-hcs` and dependencies:
+3. Next install `napari-mito-hcs` and dependencies.
+
+From the base of the `napari-mito-hcs` directory (where `pyproject.toml` and `setup.cfg` are) do:
 
     python -m pip install .
 
-4. Finally launch `napari`. The tools provided by `napari-mito-hcs` will be available under `Plugins > Mito-HCS`:
+If you are working on developing `napari-mito-hcs`, you can install it as an editable build instead with:
+
+    python -m pip install -e .
+
+4. Finally launch `napari`.
+
+The tools provided by `napari-mito-hcs` will be available under `Plugins > Mito-HCS`:
 
     napari
 
@@ -105,7 +117,7 @@ The built documentation should now be found under `docs/_build/index.html`.
 
 If `napari-mito-hcs` has been useful in your research, consider citing
 
-> Marcus Y. Chin, David Joy, Madhuja Samaddar, Anil Rana, Johann Chow, Takashi Miyamoto, and Meredith Calvert. Novel high-content and open-source image analysis tools for profiling mitochondrial morphology in neurological cell models. bioRxiv (2024)
+> Marcus Chin, David Joy, Madhuja Samaddar, Anil Rana, Johann Chow, Takashi Miyamoto, Meredith EK Calvert. Novel high-content and open-source image analysis tools for profiling mitochondrial morphology in neurological cell models. bioRxiv 2024.08.15.607824; doi: https://doi.org/10.1101/2024.08.15.607824
 
 ## License
 
