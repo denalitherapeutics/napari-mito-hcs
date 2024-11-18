@@ -183,15 +183,15 @@ class StatExtractor(object):
 
 
 def summarize_stats(all_dfs: List[pd.DataFrame],
-                    key_column: str = 'Prefix',
+                    key_columns: Union[str, List[str]] = 'Prefix',
                     norm_column: str = 'Area',
                     ignore_columns: Tuple[str] = ('ID', 'ParentID', 'PositionX', 'PositionY')) -> pd.DataFrame:
     """ Summarize the stats over all fields of view
 
     :param list[DataFrame] all_dfs:
         A stack of data frames, one per field of view
-    :param str key_column:
-        Which column to use to group the data by
+    :param str key_columns:
+        Which column(s) to use to group the data by
     :param str norm_column:
         Which column to use to normalize the summary data by (typically either 'Count' or 'Area')
     :param tuple[str] ignore_columns:
@@ -206,13 +206,16 @@ def summarize_stats(all_dfs: List[pd.DataFrame],
     all_df = pd.concat(all_dfs, ignore_index=True)
     all_df['Count'] = 1
 
-    if key_column not in all_df.columns:
-        raise KeyError(f'Expected key column "{key_column}" in {list(all_df.columns)}')
+    if isinstance(key_columns, str):
+        key_columns = [key_columns]
+
+    if not all([key_column in all_df.columns for key_column in key_columns]):
+        raise KeyError(f'Expected key column "{key_columns}" in {list(all_df.columns)}')
 
     if norm_column not in all_df.columns:
         raise KeyError(f'Expected normalization column "{norm_column}" in {list(all_df.columns)}')
 
-    value_columns = [column for column in all_df.columns if column != key_column and column not in ignore_columns]
+    value_columns = [column for column in all_df.columns if column not in key_columns and column not in ignore_columns]
     norm_mapping = {}
     for value_column in value_columns:
         if 'Mean' in value_column:
@@ -224,7 +227,7 @@ def summarize_stats(all_dfs: List[pd.DataFrame],
             norm_mapping[value_column] = 'Count'
 
     # Calculate weighted sums
-    all_df = all_df[[key_column] + value_columns].groupby(key_column, as_index=False).sum()
+    all_df = all_df[key_columns + value_columns].groupby(key_columns, as_index=False).sum()
     norm_df = all_df.copy()
 
     # Normalize the weighted sums by the sum of the weights
@@ -244,4 +247,4 @@ def summarize_stats(all_dfs: List[pd.DataFrame],
         if denom_column not in norm_df.columns:
             continue
         norm_df[out_column] = norm_df[num_column] / (norm_df[denom_column] + 1e-5)
-    return norm_df.sort_values(key_column)
+    return norm_df.sort_values(key_columns)

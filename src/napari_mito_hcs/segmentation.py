@@ -68,12 +68,17 @@ class SegmentationPipeline(Configurable):
                  smallest_object: int = 0,
                  largest_hole: int = 0,
                  binary_smoothing: int = 0,
+                 min_spacing: int = 10,
+                 min_radius: int = 2,
                  algorithm: str = 'nuclei'):
         self.intensity_smoothing = intensity_smoothing
         self.threshold = threshold
         self.smallest_object = smallest_object
         self.largest_hole = largest_hole
         self.binary_smoothing = binary_smoothing
+
+        self.min_spacing = min_spacing
+        self.min_radius = min_radius
 
         self.algorithm = algorithm
 
@@ -126,9 +131,7 @@ class SegmentationPipeline(Configurable):
     def segment_nuclei(self,
                        intensity_mask: np.ndarray,
                        cell_labels: Optional[np.ndarray] = None,
-                       nuclei_labels: Optional[np.ndarray] = None,
-                       min_spacing: int = 10,
-                       min_radius: int = 2) -> np.ndarray:
+                       nuclei_labels: Optional[np.ndarray] = None) -> np.ndarray:
         """ Segment a nuclei image
 
         Split touching nuclei with a watershed transform
@@ -146,6 +149,9 @@ class SegmentationPipeline(Configurable):
         :returns:
             A label image where 0 corresponds to background, and values >0 correspond to individual nuclei
         """
+        min_spacing = self.min_spacing
+        min_radius = self.min_radius
+
         # Find the local centers of the nuclei mask
         intensity_dist = ndi.distance_transform_edt(intensity_mask)
         marker_coords = feature.peak_local_max(
