@@ -311,7 +311,7 @@ class MitoHCSPipeline(Configurable):
         else:
             intensity_images = None
 
-        if 'texture' in pipeline.stats:
+        if 'texture' in pipeline.stats or 'minimal_ser_ratio' in pipeline.stats:
             texture_images = {feature_name.capitalize(): self.load_image(feature_path)
                               for feature_name, feature_path in feature_paths.items()}
         else:

@@ -110,6 +110,17 @@ class StatExtractor(object):
                 'eccentricity': 'Eccentricity',
             })
 
+        # Add only the minimal features to calculate aspect ratio
+        if 'minimal_aspect_ratio' in self.stats:
+            properties.extend([
+                'axis_major_length',
+                'axis_minor_length',
+            ])
+            column_renames.update({
+                'axis_major_length': 'MajorAxisLength',
+                'axis_minor_length': 'MinorAxisLength',
+            })
+
         # Convert the intensity and texture dictionaries to the expected inputs to regionprops
         final_intensity_image = []
         final_intensity_ct = 0
@@ -137,6 +148,19 @@ class StatExtractor(object):
 
             # Add all the images to the array
             for texture_name, texture_image in texture_images.items():
+                if texture_image.shape != label_image.shape:
+                    raise ValueError(f'Expected texture image with shape {label_image.shape}, got shape: {texture_image.shape}')
+                final_intensity_image.append(texture_image)
+                column_renames[f'intensity_mean-{final_intensity_ct}'] = f'TextureMean_{texture_name}'
+                final_intensity_ct += 1
+
+        if 'minimal_ser_ratio' in self.stats:
+            if texture_images is None:
+                raise ValueError(f'Expected texture images to calculate stats {self.stats}')
+
+            # Add all the images to the array
+            for texture_name in ['Spot', 'Ridge']:
+                texture_image = texture_images[texture_name]
                 if texture_image.shape != label_image.shape:
                     raise ValueError(f'Expected texture image with shape {label_image.shape}, got shape: {texture_image.shape}')
                 final_intensity_image.append(texture_image)
