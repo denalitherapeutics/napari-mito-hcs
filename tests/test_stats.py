@@ -151,7 +151,7 @@ class TestStatExtractor(unittest.TestCase):
         })
         all_dfs = [df1, df2]
 
-        res_df = stats.summarize_stats(all_dfs, key_column='Prefix', norm_column='Area')
+        res_df = stats.summarize_stats(all_dfs, key_columns='Prefix', norm_column='Area')
 
         # Values are sorted by the
         exp_df = pd.DataFrame({
@@ -207,7 +207,7 @@ class TestStatExtractor(unittest.TestCase):
         })
         all_dfs = [df1, df2]
 
-        res_df = stats.summarize_stats(all_dfs, key_column='Prefix', norm_column='Count')
+        res_df = stats.summarize_stats(all_dfs, key_columns='Prefix', norm_column='Count')
 
         # Values are sorted by the
         exp_df = pd.DataFrame({
