@@ -4,7 +4,7 @@
 
 ## Installing from Source
 
-`napari-mito-hcs` has been tested with Python 3.11 on Windows, OS X, and Linux. It may work with other python versions and operating systems with some modifications.
+`napari-mito-hcs` has been tested with Python 3.12 on Windows, OS X, and Linux. It may work with other python versions and operating systems with some modifications.
 
 1. We recommend installing `napari-mito-hcs` into a virtual environment.
 
@@ -117,7 +117,7 @@ The built documentation should now be found under `docs/_build/index.html`.
 
 If `napari-mito-hcs` has been useful in your research, consider citing
 
-> Marcus Chin, David Joy, Madhuja Samaddar, Anil Rana, Johann Chow, Takashi Miyamoto, Meredith EK Calvert. Novel high-content and open-source image analysis tools for profiling mitochondrial morphology in neurological cell models. bioRxiv 2024.08.15.607824; doi: https://doi.org/10.1101/2024.08.15.607824
+> Chin, M. Y., Joy, D. A., Samaddar, M., Rana, A., Chow, J., Miyamoto, T., & Calvert, M. (2025). Novel high-content and open-source image analysis tools for profiling mitochondrial morphology in neurological cell models. SLAS Discovery, 100208. https://doi.org/10.1016/j.slasd.2025.100208
 
 ## License
 
