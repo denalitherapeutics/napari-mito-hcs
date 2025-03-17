@@ -4,7 +4,7 @@
 
 ## Installing from Source
 
-`napari-mito-hcs` has been tested with Python 3.12 on Windows, OS X, and Linux. It may work with other python versions and operating systems with some modifications.
+`napari-mito-hcs` has been tested with Python 3.12 on Windows, OS X, and Linux. It may work with other python versions and operating systems with some modifications. Python can be installed using the [official python.org](https://www.python.org/downloads/) installer. You also need to install the [git](https://git-scm.com/downloads) command line tool. Some systems may already have one or both of these packages installed.
 
 1. We recommend installing `napari-mito-hcs` into a virtual environment.
 
@@ -27,6 +27,11 @@ To install `napari` with the necessary backend and extensions run:
 This will install napari along with the `PyQt5` backend and additional packages required to make the `napari-mito-hcs` plugin work. `napari-mito-hcs` has only been tested with the `PyQt5` backend, but may work with other napari supported backends.
 
 3. Next install `napari-mito-hcs` and dependencies.
+
+Clone the GitHub repository and then change into the base of the `napari-mito-hcs` directory
+
+    git clone https://github.com/denalitherapeutics/napari-mito-hcs.git
+    cd napari-mito-hcs
 
 From the base of the `napari-mito-hcs` directory (where `pyproject.toml` and `setup.cfg` are) do:
 
